@@ -33,6 +33,7 @@ dev = [
     "ruff>=0.5.0",
     "mypy>=1.10.0",
     "types-passlib>=1.7.7.20240819",
+    "aiosqlite>=0.20.0",
 ]
 
 [tool.hatch.build.targets.wheel]
@@ -44,10 +45,13 @@ target-version = "py312"
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "B", "UP", "N", "ASYNC", "S"]
-ignore = ["S101"]  # asserts allowed in tests
+ignore = [
+    "S101",  # asserts allowed in tests
+    "B008",  # FastAPI Depends()/Query() in defaults is required by the framework
+]
 
 [tool.ruff.lint.per-file-ignores]
-"tests/*" = ["S105", "S106"]
+"tests/*" = ["S105", "S106", "S107"]
 
 [tool.pytest.ini_options]
 pythonpath = ["."]

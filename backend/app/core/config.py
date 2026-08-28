@@ -35,7 +35,7 @@ class Settings(BaseSettings):
     # --- Mail ---
     SMTP_HOST: str = "localhost"
     SMTP_PORT: int = 1025
-    SMTP_FROM_EMAIL: str = "no-reply@fitnessgym.local"
+    SMTP_FROM_EMAIL: str = "no-reply@fitnessgym.example"
     SMTP_FROM_NAME: str = "FitnessGym"
 
     # --- Frontend ---

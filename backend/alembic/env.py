@@ -2,12 +2,18 @@
 
 from __future__ import annotations
 
+import os
+import sys
 from logging.config import fileConfig
 
 from alembic import context
 from sqlalchemy import engine_from_config, pool
 
-from app.core.config import settings
+# Ensure project root is on the path when running migrations.
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
+from app.core.config import settings  # noqa: E402
+from app.db import Base  # noqa: E402  (imports models via app.db)
 
 config = context.config
 
@@ -17,8 +23,7 @@ if config.config_file_name is not None:
 # Override sqlalchemy.url from app settings so the env file is the source of truth.
 config.set_main_option("sqlalchemy.url", settings.DATABASE_URL)
 
-# Import metadata once models exist (Phase 2).
-target_metadata = None
+target_metadata = Base.metadata
 
 
 def run_migrations_offline() -> None:

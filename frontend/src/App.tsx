@@ -1,6 +1,10 @@
 import { Link, Route, Routes } from 'react-router-dom';
 
+import { RequireAuth } from '@/components/RequireAuth';
 import { Button } from '@/components/ui/button';
+import { DashboardPage } from '@/pages/DashboardPage';
+import { LoginPage } from '@/pages/LoginPage';
+import { RegisterPage } from '@/pages/RegisterPage';
 
 function HomePage() {
   return (
@@ -24,12 +28,12 @@ function HomePage() {
             <Link to="/plans">View plans</Link>
           </Button>
           <Button asChild variant="outline">
-            <Link to="/login">Member login</Link>
+            <Link to="/register">Get started</Link>
           </Button>
         </div>
 
         <footer className="absolute bottom-6 text-xs text-muted-foreground">
-          Phase 1 · Foundation ready
+          Phase 2 — auth ready
         </footer>
       </div>
     </main>
@@ -41,15 +45,6 @@ function PlansPage() {
     <main className="container py-16">
       <h1 className="text-3xl font-bold">Membership plans</h1>
       <p className="mt-2 text-muted-foreground">Plans coming in Phase 3.</p>
-    </main>
-  );
-}
-
-function LoginPage() {
-  return (
-    <main className="container py-16">
-      <h1 className="text-3xl font-bold">Member login</h1>
-      <p className="mt-2 text-muted-foreground">Auth coming in Phase 2.</p>
     </main>
   );
 }
@@ -74,6 +69,15 @@ export default function App() {
       <Route path="/" element={<HomePage />} />
       <Route path="/plans" element={<PlansPage />} />
       <Route path="/login" element={<LoginPage />} />
+      <Route path="/register" element={<RegisterPage />} />
+      <Route
+        path="/dashboard"
+        element={
+          <RequireAuth roles={['customer']}>
+            <DashboardPage />
+          </RequireAuth>
+        }
+      />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
