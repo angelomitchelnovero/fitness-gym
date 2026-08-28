@@ -14,6 +14,7 @@ from app.api.endpoints import (
     notifications,
     payments,
     plans,
+    reports,
     users,
 )
 
@@ -44,5 +45,8 @@ admin_router.include_router(
     notifications.admin_router,
     prefix="/notifications",
     tags=["admin:notifications"],
+)
+admin_router.include_router(
+    reports.router, prefix="/reports", tags=["admin:reports"]
 )
 api_router.include_router(admin_router, prefix="/admin", tags=["admin"])

@@ -10,6 +10,7 @@ import { LoginPage } from '@/pages/LoginPage';
 import { NotificationsPage } from '@/pages/NotificationsPage';
 import { PaymentsPage } from '@/pages/PaymentsPage';
 import { PlansPage } from '@/pages/PlansPage';
+import { ReportsPage } from '@/pages/ReportsPage';
 import { RegisterPage } from '@/pages/RegisterPage';
 import { AdminPlansPage } from '@/pages/AdminPlansPage';
 import { AdminMembershipsPage } from '@/pages/AdminMembershipsPage';
@@ -81,6 +82,9 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
           </Link>
           <Link to="/admin/checkins" className="text-sm font-medium hover:underline">
             Check-ins
+          </Link>
+          <Link to="/admin/reports" className="text-sm font-medium hover:underline">
+            Reports
           </Link>
         </div>
         <Button asChild variant="ghost" size="sm">
@@ -167,6 +171,16 @@ export default function App() {
           <RequireAuth roles={['admin']}>
             <AdminLayout>
               <AdminCheckinsPage />
+            </AdminLayout>
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="/admin/reports"
+        element={
+          <RequireAuth roles={['admin']}>
+            <AdminLayout>
+              <ReportsPage />
             </AdminLayout>
           </RequireAuth>
         }

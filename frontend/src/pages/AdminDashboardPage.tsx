@@ -140,6 +140,9 @@ export function AdminDashboardPage() {
                 <Button asChild size="sm" variant="outline">
                   <Link to="/admin/checkins">Check-ins</Link>
                 </Button>
+                <Button asChild size="sm" variant="outline">
+                  <Link to="/admin/reports">Reports</Link>
+                </Button>
               </CardContent>
             </Card>
           </div>
