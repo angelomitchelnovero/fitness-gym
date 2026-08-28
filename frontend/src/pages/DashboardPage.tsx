@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Badge } from '@/components/Badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { MembershipCard } from '@/components/MembershipCard';
 import { useAuth } from '@/lib/auth';
 import {
   daysUntil,
@@ -137,9 +138,9 @@ export function DashboardPage() {
             <CardDescription>Show your QR at the front desk.</CardDescription>
           </CardHeader>
           <CardContent>
-            <p className="text-sm text-muted-foreground">Coming in Phase 5.</p>
+            <MembershipCard />
             {active && (
-              <p className="mt-2 text-xs text-muted-foreground">
+              <p className="mt-3 text-xs text-muted-foreground">
                 Plan total: {formatPrice(active.price_cents, active.currency)}
               </p>
             )}

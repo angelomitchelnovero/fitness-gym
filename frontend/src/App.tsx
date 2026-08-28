@@ -2,6 +2,7 @@ import { Link, Route, Routes } from 'react-router-dom';
 
 import { RequireAuth } from '@/components/RequireAuth';
 import { Button } from '@/components/ui/button';
+import { AdminCheckinsPage } from '@/pages/AdminCheckinsPage';
 import { CheckoutPage } from '@/pages/CheckoutPage';
 import { DashboardPage } from '@/pages/DashboardPage';
 import { LoginPage } from '@/pages/LoginPage';
@@ -70,6 +71,9 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
           <Link to="/admin/memberships" className="text-sm font-medium hover:underline">
             Memberships
           </Link>
+          <Link to="/admin/checkins" className="text-sm font-medium hover:underline">
+            Check-ins
+          </Link>
         </div>
         <Button asChild variant="ghost" size="sm">
           <Link to="/">Exit admin</Link>
@@ -127,6 +131,16 @@ export default function App() {
           <RequireAuth roles={['admin']}>
             <AdminLayout>
               <AdminMembershipsPage />
+            </AdminLayout>
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="/admin/checkins"
+        element={
+          <RequireAuth roles={['admin']}>
+            <AdminLayout>
+              <AdminCheckinsPage />
             </AdminLayout>
           </RequireAuth>
         }
