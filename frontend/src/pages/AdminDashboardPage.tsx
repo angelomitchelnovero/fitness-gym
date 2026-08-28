@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import { Badge } from '@/components/Badge';
@@ -11,6 +12,7 @@ import {
 } from '@/components/ui/card';
 import { useAdminDashboard } from '@/lib/admin';
 import { formatDate, formatPrice } from '@/lib/memberships';
+import { useTriggerExpiryReminders } from '@/lib/notifications';
 
 function paymentVariant(status: string) {
   switch (status) {
@@ -42,6 +44,8 @@ function membershipVariant(status: string) {
 
 export function AdminDashboardPage() {
   const { data, isLoading } = useAdminDashboard();
+  const triggerReminders = useTriggerExpiryReminders();
+  const [reminderMsg, setReminderMsg] = useState<string | null>(null);
 
   return (
     <main className="container py-12">
@@ -142,6 +146,43 @@ export function AdminDashboardPage() {
 
           {/* Plan breakdown + Recent activity */}
           <div className="grid gap-4 lg:grid-cols-2">
+            <Card>
+              <CardHeader>
+                <CardTitle>Renewal reminders</CardTitle>
+                <CardDescription>
+                  Manually send expiry reminders to members whose plans end
+                  in the next 7 days.
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="flex flex-wrap items-center gap-3">
+                <Button
+                  size="sm"
+                  variant="outline"
+                  disabled={triggerReminders.isPending}
+                  onClick={async () => {
+                    setReminderMsg(null);
+                    try {
+                      const res = await triggerReminders.mutateAsync();
+                      setReminderMsg(`Sent ${res.sent} reminder(s).`);
+                    } catch (err) {
+                      setReminderMsg(
+                        err instanceof Error ? err.message : 'Failed',
+                      );
+                    }
+                  }}
+                >
+                  {triggerReminders.isPending
+                    ? 'Sending…'
+                    : 'Send expiry reminders'}
+                </Button>
+                {reminderMsg && (
+                  <span className="text-xs text-muted-foreground">
+                    {reminderMsg}
+                  </span>
+                )}
+              </CardContent>
+            </Card>
+
             <Card>
               <CardHeader>
                 <CardTitle>Active by plan</CardTitle>

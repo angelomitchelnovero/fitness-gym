@@ -7,6 +7,7 @@ import { AdminDashboardPage } from '@/pages/AdminDashboardPage';
 import { CheckoutPage } from '@/pages/CheckoutPage';
 import { DashboardPage } from '@/pages/DashboardPage';
 import { LoginPage } from '@/pages/LoginPage';
+import { NotificationsPage } from '@/pages/NotificationsPage';
 import { PaymentsPage } from '@/pages/PaymentsPage';
 import { PlansPage } from '@/pages/PlansPage';
 import { RegisterPage } from '@/pages/RegisterPage';
@@ -119,6 +120,14 @@ export default function App() {
         element={
           <RequireAuth roles={['customer']}>
             <PaymentsPage />
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="/notifications"
+        element={
+          <RequireAuth roles={['customer']}>
+            <NotificationsPage />
           </RequireAuth>
         }
       />

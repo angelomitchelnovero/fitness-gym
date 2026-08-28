@@ -96,6 +96,20 @@ def scan(
 
     if not ok:
         raise MemberInadmissibleError(reason or "not admissible")
+
+    # Notification is fire-and-forget: a failed send must not undo the admit.
+    if ok:
+        try:
+            from app.services import notification_service
+            notification_service.trigger_checkin_confirmation(
+                db, user=user, check_in_id=record.id,
+            )
+        except Exception as exc:  # noqa: BLE001
+            import logging
+            logging.getLogger(__name__).warning(
+                "notification failed for check-in %s: %s", record.id, exc,
+            )
+
     return record
 
 

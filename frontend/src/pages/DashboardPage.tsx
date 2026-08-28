@@ -13,6 +13,7 @@ import { MembershipCard } from '@/components/MembershipCard';
 import { useAuth } from '@/lib/auth';
 import { useMyDashboard } from '@/lib/dashboard';
 import { formatDate, formatPrice } from '@/lib/memberships';
+import { useMyNotifications } from '@/lib/notifications';
 
 function membershipVariant(status: string) {
   switch (status) {
@@ -52,6 +53,8 @@ function checkinVariant(accepted: boolean) {
 export function DashboardPage() {
   const { user, logout } = useAuth();
   const { data, isLoading } = useMyDashboard(Boolean(user));
+  const { data: notifData } = useMyNotifications(Boolean(user));
+  const unread = notifData?.total ?? 0;
 
   return (
     <main className="container py-12">
@@ -62,9 +65,24 @@ export function DashboardPage() {
             {data?.user.full_name ?? user?.full_name}
           </h1>
         </div>
-        <Button variant="outline" onClick={logout}>
-          Sign out
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button asChild variant="outline">
+            <Link to="/notifications" aria-label="Notifications">
+              Notifications
+              {unread > 0 && (
+                <span
+                  aria-label={`${unread} unread`}
+                  className="ml-2 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1.5 text-xs font-semibold text-primary-foreground"
+                >
+                  {unread}
+                </span>
+              )}
+            </Link>
+          </Button>
+          <Button variant="outline" onClick={logout}>
+            Sign out
+          </Button>
+        </div>
       </div>
 
       {isLoading && (

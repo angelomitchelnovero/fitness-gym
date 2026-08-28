@@ -41,6 +41,13 @@ class Settings(BaseSettings):
     SMTP_FROM_EMAIL: str = "no-reply@fitnessgym.example"
     SMTP_FROM_NAME: str = "FitnessGym"
 
+    # --- Notifications ---
+    # Default outbound channel for all notifications.
+    # "logging" stores + writes nothing else; "smtp" sends via SMTP_HOST.
+    NOTIFICATION_CHANNEL: str = "logging"
+    # Days-before-expiry window used by the admin "send reminders" trigger.
+    MEMBERSHIP_EXPIRY_REMINDER_DAYS: int = 7
+
     # --- Frontend ---
     FRONTEND_URL: str = "http://localhost:5173"
 

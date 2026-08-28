@@ -164,6 +164,20 @@ class PaymentService:
 
         db.commit()
         db.refresh(payment)
+
+        # Fire-and-forget notification. Imports here avoid a circular dep
+        # between payment_service and notification_service.
+        if payment.status == PaymentStatus.SUCCEEDED:
+            try:
+                from app.services import notification_service
+                notification_service.trigger_payment_receipt(db, payment, user)
+            except Exception as exc:  # noqa: BLE001
+                # Never let a notification failure block a successful payment.
+                import logging
+                logging.getLogger(__name__).warning(
+                    "notification failed for payment %s: %s", payment.id, exc,
+                )
+
         return payment
 
     def list_for_user(self, db: Session, user: User) -> list[Payment]:

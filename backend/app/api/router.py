@@ -11,6 +11,7 @@ from app.api.endpoints import (
     customer_dashboard,
     health,
     memberships,
+    notifications,
     payments,
     plans,
     users,
@@ -24,6 +25,7 @@ api_router.include_router(plans.router, prefix="/plans", tags=["plans"])
 api_router.include_router(memberships.router, prefix="/memberships", tags=["memberships"])
 api_router.include_router(payments.router, prefix="/payments", tags=["payments"])
 api_router.include_router(checkin.router, prefix="/checkin", tags=["checkin"])
+api_router.include_router(notifications.router, prefix="/notifications", tags=["notifications"])
 api_router.include_router(
     customer_dashboard.router,
     prefix="/dashboard",
@@ -38,4 +40,9 @@ admin_router.include_router(
     checkin.admin_router, prefix="/checkins", tags=["admin:checkins"]
 )
 admin_router.include_router(admin_dashboard.router, prefix="/dashboard", tags=["admin:dashboard"])
+admin_router.include_router(
+    notifications.admin_router,
+    prefix="/notifications",
+    tags=["admin:notifications"],
+)
 api_router.include_router(admin_router, prefix="/admin", tags=["admin"])
