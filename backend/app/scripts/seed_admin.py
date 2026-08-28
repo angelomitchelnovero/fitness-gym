@@ -1,9 +1,12 @@
 """Seed the lone admin account.
 
 Usage:
-    python -m app.scripts.seed_admin --email admin@fitnessgym.local --password secret123
+    python -m app.scripts.seed_admin --email admin@example.com --password <your-password>
 
 Idempotent: re-running with the same email is a no-op.
+
+Note: the password is read from the CLI argument and never logged. Do not commit
+real passwords to source control.
 """
 
 from __future__ import annotations

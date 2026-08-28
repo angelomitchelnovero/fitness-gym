@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from functools import lru_cache
 
+from pydantic import field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -28,7 +29,9 @@ class Settings(BaseSettings):
     DATABASE_URL: str = "postgresql+psycopg://gym:gym@localhost:5432/fitness_gym"
 
     # --- Auth ---
-    JWT_SECRET: str = "change-me-in-production"  # noqa: S105 (placeholder; overridden via env)
+    # No default — must be provided via env or .env. Generate one with:
+    #     python -c "import secrets; print(secrets.token_urlsafe(64))"
+    JWT_SECRET: str
     JWT_ALGORITHM: str = "HS256"
     JWT_ACCESS_TOKEN_EXPIRE_MINUTES: int = 60
 
@@ -40,6 +43,17 @@ class Settings(BaseSettings):
 
     # --- Frontend ---
     FRONTEND_URL: str = "http://localhost:5173"
+
+    @field_validator("JWT_SECRET")
+    @classmethod
+    def _secret_must_be_nonempty(cls, value: str) -> str:
+        if not value or value.strip() == "":
+            raise ValueError(
+                "JWT_SECRET is required. Set it in your environment or .env file. "
+                "Generate one with: "
+                "python -c \"import secrets; print(secrets.token_urlsafe(64))\""
+            )
+        return value
 
 
 @lru_cache

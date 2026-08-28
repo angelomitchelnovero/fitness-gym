@@ -2,17 +2,21 @@
 
 from __future__ import annotations
 
+import os
 from collections.abc import Generator
 
-import pytest
-from fastapi.testclient import TestClient
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy.pool import StaticPool
+# Ensure JWT_SECRET is set before any app module imports settings.
+os.environ.setdefault("JWT_SECRET", "test-secret-not-used-for-real-auth")
 
-from app.db import Base
-from app.db.session import get_db
-from app.main import app
+import pytest  # noqa: E402
+from fastapi.testclient import TestClient  # noqa: E402
+from sqlalchemy import create_engine  # noqa: E402
+from sqlalchemy.orm import sessionmaker  # noqa: E402
+from sqlalchemy.pool import StaticPool  # noqa: E402
+
+from app.db import Base  # noqa: E402
+from app.db.session import get_db  # noqa: E402
+from app.main import app  # noqa: E402
 
 
 @pytest.fixture
