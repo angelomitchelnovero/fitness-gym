@@ -47,3 +47,4 @@ class User(Base, TimestampMixin):
         uselist=False,
         cascade="all, delete-orphan",
     )
+    memberships = relationship("Membership", back_populates="user")

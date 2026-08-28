@@ -4,7 +4,10 @@ import { RequireAuth } from '@/components/RequireAuth';
 import { Button } from '@/components/ui/button';
 import { DashboardPage } from '@/pages/DashboardPage';
 import { LoginPage } from '@/pages/LoginPage';
+import { PlansPage } from '@/pages/PlansPage';
 import { RegisterPage } from '@/pages/RegisterPage';
+import { AdminPlansPage } from '@/pages/AdminPlansPage';
+import { AdminMembershipsPage } from '@/pages/AdminMembershipsPage';
 
 function HomePage() {
   return (
@@ -33,18 +36,9 @@ function HomePage() {
         </div>
 
         <footer className="absolute bottom-6 text-xs text-muted-foreground">
-          Phase 2 — auth ready
+          Phase 3 — membership ready
         </footer>
       </div>
-    </main>
-  );
-}
-
-function PlansPage() {
-  return (
-    <main className="container py-16">
-      <h1 className="text-3xl font-bold">Membership plans</h1>
-      <p className="mt-2 text-muted-foreground">Plans coming in Phase 3.</p>
     </main>
   );
 }
@@ -63,6 +57,27 @@ function NotFoundPage() {
   );
 }
 
+function AdminLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="border-b bg-card">
+      <div className="container flex items-center justify-between py-3">
+        <div className="flex items-center gap-4">
+          <Link to="/admin/plans" className="text-sm font-medium hover:underline">
+            Plans
+          </Link>
+          <Link to="/admin/memberships" className="text-sm font-medium hover:underline">
+            Memberships
+          </Link>
+        </div>
+        <Button asChild variant="ghost" size="sm">
+          <Link to="/">Exit admin</Link>
+        </Button>
+      </div>
+      {children}
+    </div>
+  );
+}
+
 export default function App() {
   return (
     <Routes>
@@ -75,6 +90,26 @@ export default function App() {
         element={
           <RequireAuth roles={['customer']}>
             <DashboardPage />
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="/admin/plans"
+        element={
+          <RequireAuth roles={['admin']}>
+            <AdminLayout>
+              <AdminPlansPage />
+            </AdminLayout>
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="/admin/memberships"
+        element={
+          <RequireAuth roles={['admin']}>
+            <AdminLayout>
+              <AdminMembershipsPage />
+            </AdminLayout>
           </RequireAuth>
         }
       />
