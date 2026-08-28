@@ -1,0 +1,51 @@
+"""Application settings loaded from environment."""
+
+from __future__ import annotations
+
+from functools import lru_cache
+
+from pydantic_settings import BaseSettings, SettingsConfigDict
+
+
+class Settings(BaseSettings):
+    """Strongly typed application settings."""
+
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        env_file_encoding="utf-8",
+        case_sensitive=True,
+        extra="ignore",
+    )
+
+    # --- App ---
+    APP_ENV: str = "development"
+    APP_NAME: str = "FitnessGym"
+    APP_VERSION: str = "0.1.0"
+    API_PREFIX: str = "/api/v1"
+    CORS_ORIGINS: str = "http://localhost:5173"
+
+    # --- Database ---
+    DATABASE_URL: str = "postgresql+psycopg://gym:gym@localhost:5432/fitness_gym"
+
+    # --- Auth ---
+    JWT_SECRET: str = "change-me-in-production"  # noqa: S105 (placeholder; overridden via env)
+    JWT_ALGORITHM: str = "HS256"
+    JWT_ACCESS_TOKEN_EXPIRE_MINUTES: int = 60
+
+    # --- Mail ---
+    SMTP_HOST: str = "localhost"
+    SMTP_PORT: int = 1025
+    SMTP_FROM_EMAIL: str = "no-reply@fitnessgym.local"
+    SMTP_FROM_NAME: str = "FitnessGym"
+
+    # --- Frontend ---
+    FRONTEND_URL: str = "http://localhost:5173"
+
+
+@lru_cache
+def get_settings() -> Settings:
+    """Cached settings accessor."""
+    return Settings()
+
+
+settings = get_settings()

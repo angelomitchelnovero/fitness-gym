@@ -1,0 +1,29 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: fitness_gym_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: gym
+      POSTGRES_PASSWORD: gym
+      POSTGRES_DB: fitness_gym
+    ports:
+      - "5432:5432"
+    volumes:
+      - fitness_gym_pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U gym -d fitness_gym"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  mailpit:
+    image: axllent/mailpit:latest
+    container_name: fitness_gym_mailpit
+    restart: unless-stopped
+    ports:
+      - "1025:1025" # SMTP
+      - "8025:8025" # Web UI
+
+volumes:
+  fitness_gym_pg_data:
