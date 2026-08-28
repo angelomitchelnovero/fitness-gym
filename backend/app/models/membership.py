@@ -77,6 +77,13 @@ class Membership(Base, TimestampMixin):
         unique=True,
     )
 
+    payments = relationship(
+        "Payment",
+        primaryjoin="Membership.id == Payment.membership_id",
+        foreign_keys="Payment.membership_id",
+        viewonly=True,
+    )
+
     user = relationship("User", back_populates="memberships")
     plan = relationship("MembershipPlan", back_populates="memberships")
-    payment = relationship("Payment", foreign_keys=[payment_id])
+    payment = relationship("Payment", foreign_keys=[payment_id], post_update=True)

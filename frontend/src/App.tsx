@@ -2,8 +2,10 @@ import { Link, Route, Routes } from 'react-router-dom';
 
 import { RequireAuth } from '@/components/RequireAuth';
 import { Button } from '@/components/ui/button';
+import { CheckoutPage } from '@/pages/CheckoutPage';
 import { DashboardPage } from '@/pages/DashboardPage';
 import { LoginPage } from '@/pages/LoginPage';
+import { PaymentsPage } from '@/pages/PaymentsPage';
 import { PlansPage } from '@/pages/PlansPage';
 import { RegisterPage } from '@/pages/RegisterPage';
 import { AdminPlansPage } from '@/pages/AdminPlansPage';
@@ -36,7 +38,7 @@ function HomePage() {
         </div>
 
         <footer className="absolute bottom-6 text-xs text-muted-foreground">
-          Phase 3 — membership ready
+          Phase 4 — payments ready
         </footer>
       </div>
     </main>
@@ -90,6 +92,22 @@ export default function App() {
         element={
           <RequireAuth roles={['customer']}>
             <DashboardPage />
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="/checkout"
+        element={
+          <RequireAuth roles={['customer']}>
+            <CheckoutPage />
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="/payments"
+        element={
+          <RequireAuth roles={['customer']}>
+            <PaymentsPage />
           </RequireAuth>
         }
       />

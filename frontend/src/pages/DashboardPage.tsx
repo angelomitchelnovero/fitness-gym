@@ -86,6 +86,13 @@ export function DashboardPage() {
                   </p>
                 </div>
                 <div className="flex flex-wrap gap-2">
+                  {active.status === 'pending' && (
+                    <Button asChild>
+                      <Link to={`/checkout?membership_id=${active.id}`}>
+                        Pay now
+                      </Link>
+                    </Button>
+                  )}
                   {active.status === 'active' && (
                     <Button
                       onClick={() => renew.mutate(active.id)}
@@ -118,7 +125,9 @@ export function DashboardPage() {
             <CardDescription>History and renewals.</CardDescription>
           </CardHeader>
           <CardContent>
-            <p className="text-sm text-muted-foreground">Coming in Phase 4.</p>
+            <Button asChild variant="outline" size="sm">
+              <Link to="/payments">View all payments</Link>
+            </Button>
           </CardContent>
         </Card>
 
