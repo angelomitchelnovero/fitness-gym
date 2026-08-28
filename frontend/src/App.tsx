@@ -3,6 +3,7 @@ import { Link, Route, Routes } from 'react-router-dom';
 import { RequireAuth } from '@/components/RequireAuth';
 import { Button } from '@/components/ui/button';
 import { AdminCheckinsPage } from '@/pages/AdminCheckinsPage';
+import { AdminDashboardPage } from '@/pages/AdminDashboardPage';
 import { CheckoutPage } from '@/pages/CheckoutPage';
 import { DashboardPage } from '@/pages/DashboardPage';
 import { LoginPage } from '@/pages/LoginPage';
@@ -65,6 +66,12 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
     <div className="border-b bg-card">
       <div className="container flex items-center justify-between py-3">
         <div className="flex items-center gap-4">
+          <Link
+            to="/admin"
+            className="text-sm font-medium hover:underline"
+          >
+            Dashboard
+          </Link>
           <Link to="/admin/plans" className="text-sm font-medium hover:underline">
             Plans
           </Link>
@@ -112,6 +119,16 @@ export default function App() {
         element={
           <RequireAuth roles={['customer']}>
             <PaymentsPage />
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="/admin"
+        element={
+          <RequireAuth roles={['admin']}>
+            <AdminLayout>
+              <AdminDashboardPage />
+            </AdminLayout>
           </RequireAuth>
         }
       />
