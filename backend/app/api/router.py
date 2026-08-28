@@ -8,6 +8,7 @@ from app.api.endpoints import (
     admin_dashboard,
     auth,
     checkin,
+    customer_dashboard,
     health,
     memberships,
     payments,
@@ -23,6 +24,11 @@ api_router.include_router(plans.router, prefix="/plans", tags=["plans"])
 api_router.include_router(memberships.router, prefix="/memberships", tags=["memberships"])
 api_router.include_router(payments.router, prefix="/payments", tags=["payments"])
 api_router.include_router(checkin.router, prefix="/checkin", tags=["checkin"])
+api_router.include_router(
+    customer_dashboard.router,
+    prefix="/dashboard",
+    tags=["dashboard"],
+)
 
 admin_router = APIRouter()
 admin_router.include_router(
