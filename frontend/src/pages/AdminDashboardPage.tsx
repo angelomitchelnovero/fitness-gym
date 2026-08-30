@@ -140,9 +140,6 @@ export function AdminDashboardPage() {
                 <Button asChild size="sm" variant="outline">
                   <Link to="/admin/checkins">Check-ins</Link>
                 </Button>
-                <Button asChild size="sm" variant="outline">
-                  <Link to="/admin/reports">Reports</Link>
-                </Button>
               </CardContent>
             </Card>
           </div>
@@ -188,33 +185,6 @@ export function AdminDashboardPage() {
 
             <Card>
               <CardHeader>
-                <CardTitle>Active by plan</CardTitle>
-                <CardDescription>
-                  Live counts grouped by membership plan.
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                {data.plan_breakdown.length === 0 && (
-                  <p className="text-sm text-muted-foreground">
-                    No active memberships yet.
-                  </p>
-                )}
-                <ul className="space-y-2">
-                  {data.plan_breakdown.map((row) => (
-                    <li
-                      key={row.plan_id}
-                      className="flex items-center justify-between rounded border px-3 py-2 text-sm"
-                    >
-                      <span>{row.plan_name}</span>
-                      <Badge variant="secondary">{row.active_count}</Badge>
-                    </li>
-                  ))}
-                </ul>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
                 <CardTitle>Recent payments</CardTitle>
                 <CardDescription>Last 5 payments.</CardDescription>
               </CardHeader>
@@ -234,7 +204,7 @@ export function AdminDashboardPage() {
                         {formatPrice(p.amount_cents, p.currency)}
                       </p>
                       <p className="text-xs text-muted-foreground">
-                        User #{p.user_id} · {formatDate(p.created_at)}
+                        {p.user_name || `User #${p.user_id}`} · {formatDate(p.created_at)}
                       </p>
                     </div>
                     <Badge variant={paymentVariant(p.status)}>{p.status}</Badge>
@@ -265,7 +235,7 @@ export function AdminDashboardPage() {
                           {m.plan_name ?? `Plan #${m.plan_id}`}
                         </p>
                         <p className="text-xs text-muted-foreground">
-                          User #{m.user_id} · {formatDate(m.start_date)} →{' '}
+                          {m.user_name || `User #${m.user_id}`} · {formatDate(m.start_date)} →{' '}
                           {formatDate(m.end_date)}
                         </p>
                       </div>

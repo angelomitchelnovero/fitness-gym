@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from app.models.membership_plan import MembershipPlan
@@ -53,3 +53,18 @@ def deactivate_plan(db: Session, plan: MembershipPlan) -> MembershipPlan:
     db.commit()
     db.refresh(plan)
     return plan
+
+
+def delete_plan(db: Session, plan: MembershipPlan) -> None:
+    """Permanently remove a plan. Fails if the plan is tied to any memberships."""
+    # Check for memberships first to avoid IntegrityError
+    from app.models.membership import Membership
+    count = db.scalar(
+        select(func.count(Membership.id))
+        .where(Membership.plan_id == plan.id)
+    ) or 0
+    if count > 0:
+        raise ValueError(f"Cannot delete plan: it is used by {count} membership(s).")
+
+    db.delete(plan)
+    db.commit()

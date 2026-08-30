@@ -12,6 +12,7 @@ from app.models.check_in import CheckIn
 from app.models.membership import Membership, MembershipStatus
 from app.models.membership_plan import MembershipPlan
 from app.models.payment import Payment, PaymentStatus
+from app.models.user import User
 
 
 def _today() -> date:
@@ -102,42 +103,46 @@ def build_dashboard(db: Session) -> dict[str, Any]:
 
     # --- Recent payments (last 5) ---
     recent_payments_rows = db.execute(
-        select(Payment)
+        select(Payment, User.full_name)
+        .join(User, Payment.user_id == User.id)
         .order_by(Payment.created_at.desc())
         .limit(5)
-    ).scalars().all()
+    ).all()
     recent_payments = [
         {
-            "id": p.id,
-            "user_id": p.user_id,
-            "membership_id": p.membership_id,
-            "amount_cents": p.amount_cents,
-            "currency": p.currency,
-            "status": p.status,
-            "paid_at": p.paid_at.isoformat() if p.paid_at else None,
-            "created_at": p.created_at.isoformat(),
+            "id": row.Payment.id,
+            "user_id": row.Payment.user_id,
+            "user_name": row.full_name,
+            "membership_id": row.Payment.membership_id,
+            "amount_cents": row.Payment.amount_cents,
+            "currency": row.Payment.currency,
+            "status": row.Payment.status,
+            "paid_at": row.Payment.paid_at.isoformat() if row.Payment.paid_at else None,
+            "created_at": row.Payment.created_at.isoformat(),
         }
-        for p in recent_payments_rows
+        for row in recent_payments_rows
     ]
 
     # --- Recent memberships (last 5) ---
     recent_memberships_rows = db.execute(
-        select(Membership, MembershipPlan.name)
+        select(Membership, MembershipPlan.name, User.full_name)
         .join(MembershipPlan, MembershipPlan.id == Membership.plan_id)
+        .join(User, Membership.user_id == User.id)
         .order_by(Membership.created_at.desc())
         .limit(5)
     ).all()
     recent_memberships = [
         {
-            "id": m.id,
-            "user_id": m.user_id,
-            "plan_id": m.plan_id,
-            "plan_name": plan_name,
-            "status": m.status.value if hasattr(m.status, "value") else str(m.status),
-            "start_date": m.start_date.isoformat(),
-            "end_date": m.end_date.isoformat(),
+            "id": row.Membership.id,
+            "user_id": row.Membership.user_id,
+            "user_name": row.full_name,
+            "plan_id": row.Membership.plan_id,
+            "plan_name": row.name,
+            "status": row.Membership.status.value if hasattr(row.Membership.status, "value") else str(row.Membership.status),
+            "start_date": row.Membership.start_date.isoformat(),
+            "end_date": row.Membership.end_date.isoformat(),
         }
-        for m, plan_name in recent_memberships_rows
+        for row in recent_memberships_rows
     ]
 
     return {

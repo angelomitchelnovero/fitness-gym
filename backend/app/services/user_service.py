@@ -63,3 +63,51 @@ def update_password(db: Session, user: User, *, current: str, new: str) -> bool:
     db.commit()
     db.refresh(user)
     return True
+
+
+def admin_create_user(db: Session, email: str, full_name: str, phone: str | None = None, password: str | None = None) -> User:
+    """Create a user manually as an admin.
+    If password is None, a default 'Welcome123!' is used.
+    """
+    existing = db.scalar(select(User).where(User.email == email.lower()))
+    if existing is not None:
+        raise EmailAlreadyTakenError(email)
+
+    pwd = password or "Welcome123!"
+    user = User(
+        email=email.lower(),
+        password_hash=hash_password(pwd),
+        full_name=full_name.strip(),
+        phone=phone,
+        role=UserRole.CUSTOMER,
+        is_active=True,
+    )
+    # Every customer needs a profile for the QR system
+    user.customer_profile = CustomerProfile(qr_token=new_qr_token())
+
+    db.add(user)
+    db.commit()
+    db.refresh(user)
+    return user
+
+
+def admin_update_user(db: Session, user: User, updates: dict) -> User:
+    """Update user fields. If password is provided, hash it."""
+    if "password" in updates:
+        updates["password_hash"] = hash_password(updates.pop("password"))
+
+    for key, value in updates.items():
+        if value is not None:
+            setattr(user, key, value)
+
+    db.add(user)
+    db.commit()
+    db.refresh(user)
+    return user
+
+
+def admin_delete_user(db: Session, user: User) -> None:
+    """Permanently remove a user and their profile."""
+    db.delete(user)
+    db.commit()
+

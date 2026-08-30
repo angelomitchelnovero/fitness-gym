@@ -103,3 +103,22 @@ def admin_deactivate_plan(
         raise HTTPException(status_code=404, detail="Plan not found") from exc
     plan = plan_service.deactivate_plan(db, plan)
     return MembershipPlanRead.model_validate(plan)
+
+
+@router.delete(
+    "/admin/{plan_id}/permanent",
+    status_code=status.HTTP_204_NO_CONTENT,
+    summary="Permanently delete a plan",
+    dependencies=[Depends(require_admin)],
+)
+def admin_delete_plan(
+    plan_id: int, db: Session = Depends(get_db)
+) -> None:
+    try:
+        plan = plan_service.get_plan(db, plan_id)
+    except plan_service.PlanNotFoundError as exc:
+        raise HTTPException(status_code=404, detail="Plan not found") from exc
+    try:
+        plan_service.delete_plan(db, plan)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc

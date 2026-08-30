@@ -14,6 +14,7 @@ class DashboardUser(BaseModel):
 class MembershipSummary(BaseModel):
     id: int
     plan_id: int
+    plan_name: str
     status: str
     start_date: str | None
     end_date: str | None

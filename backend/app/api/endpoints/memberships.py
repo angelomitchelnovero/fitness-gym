@@ -2,7 +2,8 @@
 
 from __future__ import annotations
 
-from fastapi import APIRouter, Depends, HTTPException, Query, status
+from fastapi import APIRouter, Depends, HTTPException, Query, status, Body
+from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from app.core.deps import require_admin, require_customer
@@ -12,12 +13,16 @@ from app.models.user import User
 from app.schemas.membership import (
     MembershipListResponse,
     MembershipWithPlan,
+    MembershipWithUserAndPlan,
     PurchaseMembershipRequest,
 )
 from app.services import membership_service
 
 router = APIRouter()
 
+
+def _serialize_admin(m: Membership) -> MembershipWithUserAndPlan:
+    return MembershipWithUserAndPlan.model_validate(m)
 
 def _serialize(m: Membership) -> MembershipWithPlan:
     return MembershipWithPlan.model_validate(m)
@@ -110,10 +115,15 @@ def admin_list(
     offset: int = Query(default=0, ge=0),
     db: Session = Depends(get_db),
 ) -> MembershipListResponse:
+    # Need total count of all memberships for pagination
+    from sqlalchemy import func
+    from app.models.membership import Membership
+    total = db.scalar(select(func.count(Membership.id))) or 0
+
     items = membership_service.list_memberships(db, limit=limit, offset=offset)
     return MembershipListResponse(
-        items=[_serialize(m) for m in items],
-        total=len(items),
+        items=[_serialize_admin(m) for m in items],
+        total=total,
     )
 
 
@@ -129,6 +139,6 @@ def admin_expiring(
 ) -> MembershipListResponse:
     items = membership_service.list_expiring(db, days=days)
     return MembershipListResponse(
-        items=[_serialize(m) for m in items],
+        items=[_serialize_admin(m) for m in items],
         total=len(items),
     )

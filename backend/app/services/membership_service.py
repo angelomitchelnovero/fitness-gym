@@ -79,6 +79,11 @@ def purchase(db: Session, user: User, plan_id: int) -> Membership:
     Phase 4 will activate the membership once payment verifies. Until then, the
     membership stays in `pending` status.
     """
+    # Prevent double subscriptions
+    active = get_active_membership(db, user)
+    if active:
+        raise PlanUnavailableError("You already have an active or pending membership. Please wait for it to expire or cancel it first.")
+
     plan = db.get(MembershipPlan, plan_id)
     if plan is None:
         raise PlanNotFoundError(str(plan_id))

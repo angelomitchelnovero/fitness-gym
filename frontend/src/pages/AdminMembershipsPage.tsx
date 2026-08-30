@@ -51,11 +51,15 @@ export function AdminMembershipsPage() {
             {expiring.data?.items.map((m) => (
               <Card key={m.id}>
                 <CardHeader className="flex-row items-center justify-between space-y-0">
-                  <CardTitle className="text-base">Membership #{m.id}</CardTitle>
+                  <CardTitle className="text-base">
+                    {m.user?.full_name || `Member #${m.id}`}
+                  </CardTitle>
                   <Badge variant={statusVariant(m.status)}>{m.status}</Badge>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-sm">Ends {formatDate(m.end_date)}</p>
+                  <p className="text-sm">
+                    {m.plan?.name || `Plan #${m.plan_id}`} · Ends {formatDate(m.end_date)}
+                  </p>
                   <p className="text-sm text-muted-foreground">
                     {daysUntil(m.end_date)} days remaining
                   </p>
@@ -80,9 +84,11 @@ export function AdminMembershipsPage() {
               <Card key={m.id}>
                 <CardHeader className="flex-row items-center justify-between gap-4 space-y-0">
                   <div>
-                    <CardTitle className="text-base">Membership #{m.id}</CardTitle>
+                    <CardTitle className="text-base">
+                      {m.user?.full_name || `Member #${m.id}`}
+                    </CardTitle>
                     <CardDescription>
-                      Plan #{m.plan_id} · {formatDate(m.start_date)} → {formatDate(m.end_date)}
+                      {m.plan?.name || `Plan #${m.plan_id}`} · {formatDate(m.start_date)} → {formatDate(m.end_date)}
                     </CardDescription>
                   </div>
                   <Badge variant={statusVariant(m.status)}>{m.status}</Badge>

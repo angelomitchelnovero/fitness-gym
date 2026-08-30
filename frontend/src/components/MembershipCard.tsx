@@ -72,7 +72,7 @@ export function MembershipCard() {
           <QRCodeSVG value={card.data.token} size={192} />
         </div>
         <p className="text-xs text-muted-foreground">
-          Membership #{card.data.membership_id} · token auto-refreshes
+          {card.data.plan_name} · token auto-refreshes
         </p>
       </CardContent>
     </Card>

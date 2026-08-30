@@ -56,6 +56,7 @@ def issue_card(
         token=card.token,
         membership_id=membership.id,
         user_id=user.id,
+        plan_name=membership.plan.name if membership.plan else "Unknown Plan",
         issued_at=card.issued_at,
         expires_at=card.expires_at,
     )

@@ -2,6 +2,7 @@ export interface CardResponse {
   token: string;
   membership_id: number;
   user_id: number;
+  plan_name: string;
   issued_at: string;
   expires_at: string;
 }

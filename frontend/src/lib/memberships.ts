@@ -63,6 +63,18 @@ export function useDeactivatePlan() {
   });
 }
 
+export function useDeletePlan() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (id: number) => {
+      await api.delete(`/plans/admin/${id}/permanent`);
+    },
+    onSuccess: () => {
+      void qc.invalidateQueries({ queryKey: ['plans'] });
+    },
+  });
+}
+
 // ---- Memberships ----
 
 export function useMyMemberships(enabled = true) {

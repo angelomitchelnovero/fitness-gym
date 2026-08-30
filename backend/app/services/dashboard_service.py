@@ -118,6 +118,7 @@ def build_customer_dashboard(db: Session, user: User) -> dict[str, Any]:
         return {
             "id": m.id,
             "plan_id": m.plan_id,
+            "plan_name": m.plan.name if m.plan else "Unknown Plan",
             "status": m.status.value if hasattr(m.status, "value") else str(m.status),
             "start_date": m.start_date.isoformat() if m.start_date else None,
             "end_date": m.end_date.isoformat() if m.end_date else None,

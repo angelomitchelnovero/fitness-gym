@@ -12,7 +12,7 @@ import {
 import { MembershipCard } from '@/components/MembershipCard';
 import { useAuth } from '@/lib/auth';
 import { useMyDashboard } from '@/lib/dashboard';
-import { formatDate, formatPrice } from '@/lib/memberships';
+import { formatDate, formatPrice, useCancelMembership } from '@/lib/memberships';
 import { useMyNotifications } from '@/lib/notifications';
 
 function membershipVariant(status: string) {
@@ -54,6 +54,7 @@ export function DashboardPage() {
   const { user, logout } = useAuth();
   const { data, isLoading } = useMyDashboard(Boolean(user));
   const { data: notifData } = useMyNotifications(Boolean(user));
+  const cancel = useCancelMembership();
   const unread = notifData?.total ?? 0;
 
   return (
@@ -178,23 +179,37 @@ export function DashboardPage() {
                 </p>
               )}
               {data.active_membership && (
-                <div className="space-y-2">
-                  <p className="text-lg font-semibold">
-                    Plan #{data.active_membership.plan_id}
-                  </p>
-                  <p className="text-sm text-muted-foreground">
-                    {data.active_membership.start_date &&
-                      formatDate(data.active_membership.start_date)}{' '}
-                    →{' '}
-                    {data.active_membership.end_date &&
-                      formatDate(data.active_membership.end_date)}
-                  </p>
-                  <p className="text-2xl font-bold">
-                    {formatPrice(
-                      data.active_membership.price_cents,
-                      data.active_membership.currency,
-                    )}
-                  </p>
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <p className="text-lg font-semibold">
+                      {data.active_membership.plan_name || `Plan #${data.active_membership.plan_id}`}
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      {data.active_membership.start_date &&
+                        formatDate(data.active_membership.start_date)}{' '}
+                      →{' '}
+                      {data.active_membership.end_date &&
+                        formatDate(data.active_membership.end_date)}
+                    </p>
+                    <p className="text-2xl font-bold">
+                      {formatPrice(
+                        data.active_membership.price_cents,
+                        data.active_membership.currency,
+                      )}
+                    </p>
+                  </div>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    disabled={cancel.isPending}
+                    onClick={() => {
+                      if (window.confirm('Are you sure you want to cancel your membership?')) {
+                        cancel.mutate(data.active_membership.id);
+                      }
+                    }}
+                  >
+                    {cancel.isPending ? 'Cancelling…' : 'Cancel Membership'}
+                  </Button>
                 </div>
               )}
             </CardContent>

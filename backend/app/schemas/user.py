@@ -21,6 +21,14 @@ class UserSummary(BaseModel):
     created_at: datetime
 
 
+class UserUpdate(BaseModel):
+    full_name: str | None = None
+    phone: str | None = None
+    is_active: bool | None = None
+    password: str | None = None
+
+
+
 class CustomerProfileResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 

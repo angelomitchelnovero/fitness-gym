@@ -14,6 +14,7 @@ class PlanBreakdownEntry(BaseModel):
 class RecentPaymentEntry(BaseModel):
     id: int
     user_id: int
+    user_name: str
     membership_id: int | None
     amount_cents: int
     currency: str
@@ -25,6 +26,7 @@ class RecentPaymentEntry(BaseModel):
 class RecentMembershipEntry(BaseModel):
     id: int
     user_id: int
+    user_name: str
     plan_id: int
     plan_name: str | None
     status: str

@@ -40,3 +40,25 @@ export interface DashboardSummary {
   recent_payments: RecentPaymentEntry[];
   recent_memberships: RecentMembershipEntry[];
 }
+
+export interface UserSummary {
+  id: number;
+  email: string;
+  full_name: string;
+  phone: string | null;
+  role: 'admin' | 'customer';
+  is_active: boolean;
+  created_at: string;
+}
+
+export interface UserUpdate {
+  full_name?: string;
+  phone?: string;
+  is_active?: boolean;
+  password?: string;
+}
+
+export interface UserListResponse {
+  items: UserSummary[];
+  total: number;
+}

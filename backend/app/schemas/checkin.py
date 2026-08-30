@@ -13,6 +13,7 @@ class CardResponse(BaseModel):
     token: str
     membership_id: int
     user_id: int
+    plan_name: str
     issued_at: datetime
     expires_at: datetime
 

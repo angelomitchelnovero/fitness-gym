@@ -14,6 +14,7 @@ import { ReportsPage } from '@/pages/ReportsPage';
 import { RegisterPage } from '@/pages/RegisterPage';
 import { AdminPlansPage } from '@/pages/AdminPlansPage';
 import { AdminMembershipsPage } from '@/pages/AdminMembershipsPage';
+import { AdminUsersPage } from '@/pages/AdminUsersPage';
 
 function HomePage() {
   return (
@@ -74,6 +75,9 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
           >
             Dashboard
           </Link>
+          <Link to="/admin/users" className="text-sm font-medium hover:underline">
+            Members
+          </Link>
           <Link to="/admin/plans" className="text-sm font-medium hover:underline">
             Plans
           </Link>
@@ -82,9 +86,6 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
           </Link>
           <Link to="/admin/checkins" className="text-sm font-medium hover:underline">
             Check-ins
-          </Link>
-          <Link to="/admin/reports" className="text-sm font-medium hover:underline">
-            Reports
           </Link>
         </div>
         <Button asChild variant="ghost" size="sm">
@@ -146,6 +147,16 @@ export default function App() {
         }
       />
       <Route
+        path="/admin/users"
+        element={
+          <RequireAuth roles={['admin']}>
+            <AdminLayout>
+              <AdminUsersPage />
+            </AdminLayout>
+          </RequireAuth>
+        }
+      />
+      <Route
         path="/admin/plans"
         element={
           <RequireAuth roles={['admin']}>
@@ -171,16 +182,6 @@ export default function App() {
           <RequireAuth roles={['admin']}>
             <AdminLayout>
               <AdminCheckinsPage />
-            </AdminLayout>
-          </RequireAuth>
-        }
-      />
-      <Route
-        path="/admin/reports"
-        element={
-          <RequireAuth roles={['admin']}>
-            <AdminLayout>
-              <ReportsPage />
             </AdminLayout>
           </RequireAuth>
         }
