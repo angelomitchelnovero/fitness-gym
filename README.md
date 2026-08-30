@@ -142,3 +142,7 @@ npm run typecheck && npm run lint && npm run build    # frontend
 ## Deployment
 
 See [DEPLOYMENT.md](./DEPLOYMENT.md) for production notes.
+
+## Free
+
+You can try it out :)
