@@ -28,9 +28,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     async (email: string, password: string) => {
       const res = await api.post<{ access_token: string }>('/auth/login', { email, password });
       setToken(res.data.access_token);
-      await refresh();
+      const userRes = await api.get('/auth/me');
+      const user = userRes.data;
+      setState({ user, loading: false, error: null });
+      return user;
     },
-    [refresh],
+    [],
   );
 
   const register = useCallback<AuthContextValue['register']>(

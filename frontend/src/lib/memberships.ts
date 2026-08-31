@@ -37,6 +37,7 @@ export function useCreatePlan() {
       (await api.post<MembershipPlan>('/plans/admin', input)).data,
     onSuccess: () => {
       void qc.invalidateQueries({ queryKey: ['plans'] });
+      void qc.invalidateQueries({ queryKey: ['admin', 'dashboard'] });
     },
   });
 }
@@ -48,6 +49,7 @@ export function useUpdatePlan() {
       (await api.patch<MembershipPlan>(`/plans/admin/${id}`, patch)).data,
     onSuccess: () => {
       void qc.invalidateQueries({ queryKey: ['plans'] });
+      void qc.invalidateQueries({ queryKey: ['admin', 'dashboard'] });
     },
   });
 }
@@ -59,6 +61,7 @@ export function useDeactivatePlan() {
       (await api.delete<MembershipPlan>(`/plans/admin/${id}`)).data,
     onSuccess: () => {
       void qc.invalidateQueries({ queryKey: ['plans'] });
+      void qc.invalidateQueries({ queryKey: ['admin', 'dashboard'] });
     },
   });
 }
@@ -71,6 +74,7 @@ export function useDeletePlan() {
     },
     onSuccess: () => {
       void qc.invalidateQueries({ queryKey: ['plans'] });
+      void qc.invalidateQueries({ queryKey: ['admin', 'dashboard'] });
     },
   });
 }
@@ -112,6 +116,8 @@ export function usePurchaseMembership() {
       (await api.post<Membership>('/memberships', { plan_id: planId })).data,
     onSuccess: () => {
       void qc.invalidateQueries({ queryKey: ['memberships'] });
+      void qc.invalidateQueries({ queryKey: ['dashboard', 'me'] });
+      void qc.invalidateQueries({ queryKey: ['admin', 'dashboard'] });
     },
   });
 }
@@ -123,6 +129,8 @@ export function useRenewMembership() {
       (await api.post<Membership>(`/memberships/${membershipId}/renew`)).data,
     onSuccess: () => {
       void qc.invalidateQueries({ queryKey: ['memberships'] });
+      void qc.invalidateQueries({ queryKey: ['dashboard', 'me'] });
+      void qc.invalidateQueries({ queryKey: ['admin', 'dashboard'] });
     },
   });
 }
@@ -134,6 +142,8 @@ export function useCancelMembership() {
       (await api.post<Membership>(`/memberships/${membershipId}/cancel`)).data,
     onSuccess: () => {
       void qc.invalidateQueries({ queryKey: ['memberships'] });
+      void qc.invalidateQueries({ queryKey: ['dashboard', 'me'] });
+      void qc.invalidateQueries({ queryKey: ['admin', 'dashboard'] });
     },
   });
 }

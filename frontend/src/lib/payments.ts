@@ -36,6 +36,8 @@ export function useCheckout() {
     onSuccess: () => {
       void qc.invalidateQueries({ queryKey: ['payments'] });
       void qc.invalidateQueries({ queryKey: ['memberships'] });
+      void qc.invalidateQueries({ queryKey: ['dashboard', 'me'] });
+      void qc.invalidateQueries({ queryKey: ['admin', 'dashboard'] });
     },
   });
 }
@@ -55,6 +57,8 @@ export function useVerifyPayment() {
     onSuccess: () => {
       void qc.invalidateQueries({ queryKey: ['payments'] });
       void qc.invalidateQueries({ queryKey: ['memberships'] });
+      void qc.invalidateQueries({ queryKey: ['dashboard', 'me'] });
+      void qc.invalidateQueries({ queryKey: ['admin', 'dashboard'] });
     },
   });
 }

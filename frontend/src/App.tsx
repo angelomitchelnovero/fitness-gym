@@ -1,7 +1,11 @@
+import { useState } from 'react';
 import { Link, Route, Routes } from 'react-router-dom';
 
 import { RequireAuth } from '@/components/RequireAuth';
 import { Button } from '@/components/ui/button';
+import { Modal } from '@/components/ui/modal';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { useActivePlans, formatPrice } from '@/lib/memberships';
 import { AdminCheckinsPage } from '@/pages/AdminCheckinsPage';
 import { AdminDashboardPage } from '@/pages/AdminDashboardPage';
 import { CheckoutPage } from '@/pages/CheckoutPage';
@@ -17,6 +21,9 @@ import { AdminMembershipsPage } from '@/pages/AdminMembershipsPage';
 import { AdminUsersPage } from '@/pages/AdminUsersPage';
 
 function HomePage() {
+  const [isPlansOpen, setIsPlansOpen] = useState(false);
+  const { data: plans, isLoading } = useActivePlans();
+
   return (
     <main className="min-h-screen bg-gradient-to-b from-background to-muted">
       <div className="container flex min-h-screen flex-col items-center justify-center text-center">
@@ -34,8 +41,9 @@ function HomePage() {
         </p>
 
         <div className="mt-10 flex gap-3">
-          <Button asChild>
-            <Link to="/plans">View plans</Link>
+          <Button onClick={() => setIsPlansOpen(true)}>View plans</Button>
+          <Button asChild variant="outline">
+            <Link to="/login">Login</Link>
           </Button>
           <Button asChild variant="outline">
             <Link to="/register">Get started</Link>
@@ -43,9 +51,47 @@ function HomePage() {
         </div>
 
         <footer className="absolute bottom-6 text-xs text-muted-foreground">
-          Phase 4 — payments ready
+          By Angelo Mitchel D. Novero
         </footer>
       </div>
+
+      <Modal
+        isOpen={isPlansOpen}
+        onClose={() => setIsPlansOpen(false)}
+        title="Membership Plans"
+      >
+        {isLoading ? (
+          <p className="text-sm text-muted-foreground text-center py-4">Loading plans…</p>
+        ) : (
+          <div className="grid gap-3">
+            {plans?.items.map((plan) => (
+              <Card key={plan.id}>
+                <CardHeader className="p-4 pb-2">
+                  <CardTitle className="text-base">{plan.name}</CardTitle>
+                  <CardDescription className="text-xs">
+                    {plan.duration_days} days
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="p-4 pt-0">
+                  <p className="text-lg font-bold">
+                    {formatPrice(plan.price_cents, plan.currency)}
+                  </p>
+                  {plan.description && (
+                    <p className="text-xs text-muted-foreground mt-1">
+                      {plan.description}
+                    </p>
+                  )}
+                </CardContent>
+              </Card>
+            ))}
+            {plans?.items.length === 0 && (
+              <p className="text-sm text-muted-foreground text-center py-4">
+                No active plans available.
+              </p>
+            )}
+          </div>
+        )}
+      </Modal>
     </main>
   );
 }

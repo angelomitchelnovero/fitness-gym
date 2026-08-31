@@ -25,7 +25,8 @@ export function LoginPage() {
     setError(null);
     setBusy(true);
     try {
-      await login(email.trim(), password);
+      const user = await login(email.trim(), password);
+      const fallback = user.role === 'admin' ? '/admin' : '/dashboard';
       navigate(fromState?.from ?? fallback, { replace: true });
     } catch (err) {
       setError(toApiError(err).message);
